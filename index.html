@@ -10,11 +10,13 @@
 <body>
     <div class="container">
         <h1>Star Wars Character Explorer</h1>
-        <form id="character-form">
-            <select id="character-select" required>
-                <option value="">Select a character</option>
-            </select>
-            <button type="submit">Search</button>
+        <form id="character-form" class="form-inline">
+            <div class="form-group">
+                <select id="character-select" class="form-control" required>
+                    <option value="">Select a character</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Search</button>
         </form>
         <div class="spinner-border" role="status" id="loading-spinner" style="display: none;">
             <span class="sr-only">Loading...</span>

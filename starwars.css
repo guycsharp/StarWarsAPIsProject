@@ -7,26 +7,28 @@ body {
     min-height: 100vh;
     background-color: #f0f0f0;
     margin: 0;
+    text-align: center; /* Center text */
 }
 
 .container {
-    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
-form {
+.form-inline {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     margin-bottom: 20px;
 }
 
-input {
-    padding: 10px;
-    margin: 5px;
-    font-size: 16px;
+.form-control {
+    margin-right: 10px;
 }
 
-button {
-    padding: 10px 20px;
-    font-size: 16px;
-    cursor: pointer;
+.spinner-border {
+    margin: 20px 0; /* Add margin around spinner */
 }
 
 .character-info {
@@ -36,5 +38,14 @@ button {
     background-color: #fff;
     width: 80%;
     max-width: 600px;
-    text-align: left;
+    text-align: left; /* Align text to the left inside character info */
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center contents horizontally */
+}
+
+.character-info img {
+    max-width: 100%;
+    height: auto;
+    margin-bottom: 20px; /* Add margin below image */
 }
