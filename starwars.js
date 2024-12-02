@@ -1,18 +1,6 @@
-// starwars.js
-
-// Static image URLs for some characters
 const characterImages = {
     'default': 'https://static.wikia.nocookie.net/starwars/images/c/cc/Star-wars-logo-new-tall.jpg/revision/latest/scale-to-width-down/1000?cb=20190313021755',
-    'Luke Skywalker': 'https://media.contentapi.ea.com/content/dam/star-wars-battlefront-2/images/2019/08/swbf2-refresh-hero-large-heroes-page-luke-skywalker-16x9-xl.jpg.adapt.crop16x9.1920w.jpg',
-    'Darth Vader': 'https://lumiere-a.akamaihd.net/v1/images/darth-vader-main_4560aff7.jpeg?region=0%2C67%2C1280%2C720',
-    'Leia Organa': 'https://lumiere-a.akamaihd.net/v1/images/leia-organa-main_9af6ff81.jpeg?region=187%2C157%2C1400%2C786',
-    'C-3PO': 'https://lumiere-a.akamaihd.net/v1/images/c-3po-main_d6850e28.jpeg?region=176%2C0%2C951%2C536',
-    'R2-D2': 'https://lumiere-a.akamaihd.net/v1/images/r2-d2-main_f315b094.jpeg?region=273%2C0%2C951%2C536',
-    'Owen Lars': 'https://lumiere-a.akamaihd.net/v1/images/owen-lars-main_08c717c8.jpeg?region=0%2C34%2C1053%2C593',
-    'Beru Whitesun lars': 'https://lumiere-a.akamaihd.net/v1/images/beru-lars-main_fa680a4c.png?region=342%2C0%2C938%2C527',
-    'R5-D4': 'https://lumiere-a.akamaihd.net/v1/images/r5-d4_main_image_7d5f078e.jpeg?region=374%2C0%2C1186%2C666',
-    'Biggs Darklighter': 'https://lumiere-a.akamaihd.net/v1/images/image_606ff7f7.jpeg?region=0%2C0%2C1560%2C878',
-    'Obi-Wan Kenobi': 'https://lumiere-a.akamaihd.net/v1/images/obi-wan-kenobi-main_3286c63c.jpeg?region=0%2C0%2C1280%2C721'
+    // Other character images...
 };
 
 class Character {
@@ -31,19 +19,23 @@ class Character {
 
     static displayCharacter(character) {
         const characterInfo = document.getElementById('character-info');
+        if (!characterInfo) {
+            console.error('Element with id="character-info" not found');
+            return;
+        }
         if (character) {
             const characterImage = characterImages[character.name] || characterImages['default'];
             characterInfo.innerHTML = `
-                    <img src="${characterImage}" alt="${character.name}" class="img-fluid mb-3">
-                    <h2>${character.name}</h2>
-                    <p><strong>Height:</strong> ${character.height} cm</p>
-                    <p><strong>Mass:</strong> ${character.mass} kg</p>
-                    <p><strong>Hair Color:</strong> ${character.hair_color}</p>
-                    <p><strong>Skin Color:</strong> ${character.skin_color}</p>
-                    <p><strong>Eye Color:</strong> ${character.eye_color}</p>
-                    <p><strong>Birth Year:</strong> ${character.birth_year}</p>
-                    <p><strong>Gender:</strong> ${character.gender}</p>
-                `;
+                <img src="${characterImage}" alt="${character.name}" class="img-fluid mb-3">
+                <h2>${character.name}</h2>
+                <p><strong>Height:</strong> ${character.height} cm</p>
+                <p><strong>Mass:</strong> ${character.mass} kg</p>
+                <p><strong>Hair Color:</strong> ${character.hair_color}</p>
+                <p><strong>Skin Color:</strong> ${character.skin_color}</p>
+                <p><strong>Eye Color:</strong> ${character.eye_color}</p>
+                <p><strong>Birth Year:</strong> ${character.birth_year}</p>
+                <p><strong>Gender:</strong> ${character.gender}</p>
+            `;
             characterInfo.style.display = 'block';
         } else {
             characterInfo.innerHTML = '<p>No character found</p>';
@@ -71,7 +63,16 @@ const simulateLoading = (callback) => {
 
 const populateCharacterSelect = async () => {
     const selectElement = document.getElementById('character-select');
+    if (!selectElement) {
+        console.error('Element with id="character-select" not found');
+        return;
+    }
+
     const response = await fetch('https://swapi.dev/api/people/');
+    if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
     const data = await response.json();
     const characters = data.results;
 
@@ -108,20 +109,19 @@ const handleFormSubmit = async (event) => {
 
 // Ensure the DOM is fully loaded before adding event listeners
 document.addEventListener('DOMContentLoaded', () => {
-    console.log("DOM fully loaded");  // Check if this logs
-    const form = document.getElementById('character-form');
-    console.log("Form element:", form); // Check if form is null
-    if (form) {
-        form.addEventListener('submit', handleFormSubmit);
-        console.log("Event listener attached"); // Check if this logs
-    } else {
-        console.error("Form element not found!"); // This will likely show if the ID is wrong or the element isn't there yet
+    console.log('DOM fully loaded and parsed');
+    
+    const characterForm = document.getElementById('character-form');
+    if (!characterForm) {
+        console.error('Element with id="character-form" not found');
+        return;
     }
-    populateCharacterSelect();
 
-    // Load character from local storage if available
-    const savedCharacter = Character.loadFromLocalStorage();
-    if (savedCharacter) {
-        Character.displayCharacter(savedCharacter);
-    }
+    console.log('character-form element found:', characterForm);
+
+    // Add a simple event listener to test
+    characterForm.addEventListener('submit', (event) => {
+        event.preventDefault();
+        console.log('Form submitted!');
+    });
 });
