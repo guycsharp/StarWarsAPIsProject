@@ -135,25 +135,12 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
     }
 
-    characterForm.addEventListener('submit', (event) => {
-        event.preventDefault();
-        console.log('Form submitted!');
-    });
-
-    const populateCharacterSelect = () => {
-        if (!characterSelect) {
-            console.error('Element with id="character-select" not found');
-            return;
-        }
-
-        const characters = ['Luke Skywalker', 'Darth Vader', 'Leia Organa'];
-        characters.forEach(character => {
-            const option = document.createElement('option');
-            option.value = character;
-            option.text = character;
-            characterSelect.add(option);
-        });
-    };
-
+    characterForm.addEventListener('submit', handleFormSubmit);
     populateCharacterSelect();
+
+    // Load character from local storage if available
+    const savedCharacter = Character.loadFromLocalStorage();
+    if (savedCharacter) {
+        Character.displayCharacter(savedCharacter);
+    }
 });
