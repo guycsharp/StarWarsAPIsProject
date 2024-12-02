@@ -15,7 +15,6 @@ const characterImages = {
     'Obi-Wan Kenobi':'https://lumiere-a.akamaihd.net/v1/images/obi-wan-kenobi-main_3286c63c.jpeg?region=0%2C0%2C1280%2C721'
 };
 
-// Character class with methods to fetch and display data
 class Character {
     constructor(name) {
         this.name = name;
@@ -51,9 +50,25 @@ class Character {
             characterInfo.style.display = 'block';
         }
     }
+
+    static saveToLocalStorage(character) {
+        localStorage.setItem('character', JSON.stringify(character));
+    }
+
+    static loadFromLocalStorage() {
+        return JSON.parse(localStorage.getItem('character'));
+    }
 }
 
-// Function to populate the dropdown with character options
+const simulateLoading = (callback) => {
+    const spinner = document.getElementById('loading-spinner');
+    spinner.style.display = 'block';
+    setTimeout(() => {
+        spinner.style.display = 'none';
+        callback();
+    }, 2000);
+};
+
 const populateCharacterSelect = async () => {
     const selectElement = document.getElementById('character-select');
     const response = await fetch('https://swapi.dev/api/people/');
@@ -68,11 +83,9 @@ const populateCharacterSelect = async () => {
     });
 };
 
-// Function to handle form submission
 const handleFormSubmit = async (event) => {
     event.preventDefault();
     const characterName = document.getElementById('character-select').value;
-    const spinner = document.getElementById('loading-spinner');
     const characterInfo = document.getElementById('character-info');
 
     if (characterName === '') {
@@ -80,23 +93,32 @@ const handleFormSubmit = async (event) => {
         return;
     }
 
-    spinner.style.display = 'block'; // Show spinner
-    characterInfo.style.display = 'none'; // Hide character info
-
-    const character = new Character(characterName);
-    try {
-        const characterData = await character.fetchCharacter();
-        Character.displayCharacter(characterData);
-    } catch (error) {
-        console.error('Error fetching character:', error);
-        alert('Error fetching character data');
-    } finally {
-        spinner.style.display = 'none'; // Hide spinner
-    }
+    simulateLoading(async () => {
+        const character = new Character(characterName);
+        try {
+            const characterData = await character.fetchCharacter();
+            Character.displayCharacter(characterData);
+            Character.saveToLocalStorage(characterData);
+        } catch (error) {
+            console.error('Error fetching character:', error);
+            alert('Error fetching character data');
+        }
+    });
 };
 
-// Adding event listener to the form
+// Add event listeners
 document.getElementById('character-form').addEventListener('submit', handleFormSubmit);
-
-// Populate the character select dropdown on page load
 document.addEventListener('DOMContentLoaded', populateCharacterSelect);
+
+// Load character from local storage if available
+document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('character-form').addEventListener('submit', handleFormSubmit);
+    populateCharacterSelect();
+    
+    // Load character from local storage if available
+    const savedCharacter = Character.loadFromLocalStorage();
+    if (savedCharacter) {
+        Character.displayCharacter(savedCharacter);
+    }
+});
+
