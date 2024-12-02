@@ -120,31 +120,26 @@ const handleFormSubmit = async (event) => {
 document.addEventListener('DOMContentLoaded', () => {
     console.log('DOM fully loaded and parsed');
 
-    // Trying to access elements
     const characterForm = document.getElementById('character-form');
     const characterSelect = document.getElementById('character-select');
     const characterInfo = document.getElementById('character-info');
     const spinner = document.getElementById('loading-spinner');
 
-    // Logging to verify if elements are found
     console.log('character-form:', characterForm);
     console.log('character-select:', characterSelect);
     console.log('character-info:', characterInfo);
     console.log('loading-spinner:', spinner);
 
-    // Check and log if elements are found
     if (!characterForm) {
         console.error('Element with id="character-form" not found');
         return;
     }
 
-    // Adding basic event listener to test functionality
     characterForm.addEventListener('submit', (event) => {
         event.preventDefault();
         console.log('Form submitted!');
     });
 
-    // Adding options to select element to test functionality
     const populateCharacterSelect = () => {
         if (!characterSelect) {
             console.error('Element with id="character-select" not found');
